@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Fence Diagrams XP</title>
+		<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" >
+		<link rel="stylesheet" href="styles/main.css" >
+		<link rel="stylesheet" href="styles/parsley.css" >
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/papaparse@5.5.3/papaparse.min.js"></script>
+		
+			
+	</head>
+	<body>
+		<div id = "info"><h2>Fence Diagrams XP </h2></div>
+		
+		<div id = "instructions" class="modal modal-xl" data-bs-keyboard="true" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title fs-3">Instructions  </h2>
+					 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+			<div class="modal-body">
+				<h4>General use</h4> 
+				<p>You can edit the sample model by adding, removing, or editing existing boreholes 
+				   and fence diagrams. You can also load your own data file by clicking the "Load 
+				   CVS file..." button. To change the look of the model, use the controls in the top 
+				   right corner of the screen. </p>  
+				<h4>Selecting a borehole</h4>
+				<p>To select a borehole, double click on it. After a borehole is selected, it will 
+				   turn yellow. You can only select one borehole at a time.</p>
+				<h4>Removing a borehole</h4>
+				   
+				<div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button> </div>
+			</div></div></div>
+		</div>
+		
+		<div id = "about" class="modal modal-xl" data-bs-keyboard="true" tabindex="-1">
+			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2 class="modal-title fs-3">About </h2>
+					 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+			<div class="modal-body">
+				<h3 class="text-center">Fence Diagrams XP </h3>
+				<h4 class="text-center"><span class="badge rounded-pill text-bg-secondary">Ver 0.0.2</span><p></p></h4>
+				    <p>Fence Diagrams is a simple but useful web application developed to generate 
+				       interactive 3D models of geotechnical borehole data and fence diagrams.</p>
+				    <p>It is written using HTML/CSS code and a few open-source javascript frameworks 
+				       such as threejs, bootstrap, jquery, jquery-ui and troika-three-text.</p>
+				
+				<h4>MIT License</h4>
+					<p>Copyright 2025 Xavier Perez</p>
+					<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+						of this software and associated documentation files (the "Software"), to deal
+						in the Software without restriction, including without limitation the rights
+						to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+						copies of the Software, and to permit persons to whom the Software is
+						furnished to do so, subject to the following conditions:
+
+						The above copyright notice and this permission notice shall be included in
+						all copies or substantial portions of the Software.<br>
+
+						THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+						IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+						FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+						AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+						LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+						OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+						THE SOFTWARE.</p>
+				   
+				<div class="modal-footer"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button> </div>
+			</div></div></div>
+		</div>
+		
+		<div class="modal" id="bhedit" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h1 class="modal-title fs-5" id="Label">Edit Borehole</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			  </div>
+			  <div class="modal-body">
+				<form id="bhEditForm">
+				  <div class="row">
+					<label class="col-form-label col-sm-2" for="bhName">Name:</label> 
+					<div class="col">
+						<input type="text" class="form-control" id="bhName" name="bhname" placeholder="Enter name">
+					</div>
+				  </div>
+				  <div class="mb-2 mt-3">Coordinates:</div>
+				  <div class="row">
+					  <div class="col input-group">
+						<span class="input-group-text">X:</span>  
+						<input type="text" class="form-control" id="bhx" name="bhx" placeholder="value" required>
+					  </div>
+					  <div class="col input-group">
+						<span class="input-group-text">Y:</span>  
+						<input type="text" class="form-control" id="bhy" name="bhy" placeholder="value" required>
+					  </div>
+					  <div class="col input-group">
+						<span class="input-group-text">Z:</span>  
+						<input type="text" class="form-control" id="bhz" name="bhz"placeholder="value" required>
+					  </div>
+				  </div>
+				  <div class="row mb-4 mt-4">
+					 <label class="col-form-label col-sm-2	" for="strata">Strata:</label>  
+					 <div class="col">
+						<input type="text" class="form-control" id="strata" name="strata" placeholder="1.0, 1.0, ..."><br>
+					</div>
+				  </div>
+					<div class="modal-footer">
+						
+						<button id="bhEditBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+						<button type="button" class="btn btn-secondary : active" data-bs-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<div class="modal" id="bhnew" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h1 class="modal-title fs-5" id="Label">Add New Borehole</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			  </div>
+			  <div class="modal-body">
+				<form id="bhNewForm">
+				  <div class="row">
+					<label class="col-form-label col-sm-2" for="bhName">Name:</label> 
+					<div class="col">
+						<input type="text" class="form-control" id="bhName" name="bhname" value="BH-00" data-parsley-required>
+					</div>
+				  </div>
+				  <div class="mb-2 mt-3">Coordinates:</div>
+				  <div class="row">
+					  <div class="col input-group">
+						<span class="input-group-text">X:</span>  
+						<input type="text" class="form-control" id="newbhx" name="bhx" data-parsley-type="integer" data-parsley-required>
+					  </div>
+					  <div class="col input-group">
+						<span class="input-group-text">Y:</span>  
+						<input type="text" class="form-control" id="newbhy" name="bhy" value="0" data-parsley-required>
+					  </div>
+					  <div class="col input-group">
+						<span class="input-group-text">Z:</span>  
+						<input type="text" class="form-control" id="newbhz" name="bhz"value="0" data-parsley-required>
+					  </div>
+				  </div>
+				  <div class="row mb-4 mt-4">
+					 <label class="col-form-label col-sm-2	" for="strata">Strata:</label>  
+					 <div class="col">
+						<input type="text" class="form-control" id="strata" name="strata" value="1.0, 1.0, 1.0" data-parsley-required><br>
+					</div>
+				  </div>
+					<div class="modal-footer">
+						<button id="bhNewBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		<div class="modal modal-sm" id="bhcolors" data-bs-backdrop="static" data-bs-keyboard="true" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h1 class="modal-title fs-5" id="Label">Change Layer Colors</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			  </div>
+			  <div class="modal-body">
+				<form id="bhColorsForm">
+					<div class="row bm-6">						
+						<label class="col-form-label col-sm-6 text-end" >Select palette:</label> 
+						<div class="col col-sm">	
+							<select id="palselect" class="form-select col col-sm-4" aria-label="Select palette">
+							  <option value="palette0" selected>Default</option>
+							  <option value="palette1" >Palette 1</option>
+							  <option value="palette2" >Palette 2</option>
+							  <option value="palette3" >Palette 3</option>
+							</select>
+						</div>  
+					</div>
+				  <div class="row mt-4">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol0">Layer 1</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol0" name="bhCol0">
+					</div>
+				  </div>
+					<div class="row">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol1">Layer 2</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol1" name="bhCol1">
+					</div>
+					</div>
+					<div class="row">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol2">Layer 3</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol2" name="bhCol2">
+					</div>
+					</div>
+					<div class="row">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol3">Layer 4</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol3" name="bhCol3">
+					</div>
+					</div>
+					<div class="row">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol4">Layer 5</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol4" name="bhCol4">
+					</div>
+					</div>
+					<div class="row">
+					<label class="col-form-label col-sm-4 text-end" for="bhCol5">Layer 6</label> 
+					<div class="col col-sm-6">
+						<input type="color" class="form-control" id="bhCol5" name="bhCol5">
+					</div>
+					</div>
+				  </div>
+					<div class="modal-footer">
+						<button id="bhColorBtn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					</div>
+				</form>
+			  </div>
+			</div>
+		  </div>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script>
+		<script type="importmap">
+			{ "imports": { 	
+				"three": "https://cdn.jsdelivr.net/npm/three@0.175.0/+esm",
+				"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/",
+				"troika-three-text": "https://cdn.jsdelivr.net/npm/troika-three-text@0.52.4/+esm",
+				"file-saver": "https://cdn.jsdelivr.net/npm/file-saver@2.0.5/+esm"
+				}
+			}
+		</script>
+				
+		<script type="module">
+		import * as THREE from "three";
+		import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+		import { VRButton } from "three/addons/webxr/VRButton.js";
+		import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+		import { Text } from "troika-three-text";
+		import { createBorehole, createFence, createLabel } from "/main.js";
+		import { changevScale, updateFences, centerView, resetScene } from "/main.js";
+		import { Borehole } from "/modules/boreholeMesh.js";
+		import { Fence } from "./modules/fenceMesh.js";
+		import saveAs from "file-saver";
+
+		
+
+
+		// Define some sample data
+		var bhdata = {
+			type:"FeatureCollection",
+			features:[
+				{ type:"Feature", 
+				  geometry: {type:"Point", coordinates:[16, 0.0, 10]}, 
+				  properties: {name:"BH-01", strata:[2.75, 3.5, 2.1, 4.1]} },
+				{ type:"Feature",
+				  geometry: {type:"Point", coordinates:[-12, -0.4, 8.4]}, 
+				  properties: {name:"BH-02", strata:[4, 3.5, 3.75, 2.1]} },
+				{ type:"Feature",
+				  geometry: {type:"Point", coordinates:[2, 0.0, -1.1]}, 
+				  properties: {name:"BH-03", strata:[3.4, 3.5, 3.9]} },
+				{ type:"Feature",
+				  geometry: {type:"Point", coordinates:[10, 2.0, -8.2]}, 
+				  properties: {name:"BH-04", strata:[5.2, 2.5, 6.1]} },
+				{ type:"Feature",
+				  geometry: {type:"Point", coordinates:[-12, -0.6, -7.6]}, 
+				  properties: {name:"BH-05", strata:[4.2, 2.2, 3.6]} },
+			]
+		};
+		
+		
+		var fencedata = [
+			{id:undefined, bh0: "BH-02", bh1:"BH-01"},
+			{id:undefined, bh0: "BH-01", bh1:"BH-04"},
+			{id:undefined, bh0: "BH-02", bh1:"BH-05"},
+			{id:undefined, bh0: "BH-03", bh1:"BH-04"},
+			{id:undefined, bh0: "BH-04", bh1:"BH-05"},
+		];
+	    
+	    // Define layer colors
+	    var palette0 = ['green','orange','blue','lightsteelblue','deeppink', 'cyan'] //palette with names
+	    const palette1 = ['#EF476F','#F78C6B','#FFD166','#06D6A0','#118AB2', '#073B4C']
+	    const palette2 = ['#0015FF','#FF00A1','#90FE00','#8400FF','#00FFF7', '#FF7300']
+	    const palette3 = ['#0D3082','#88DAE7','#76CD65','#FFC247','#FF8133', '#EB5133']
+	    
+	    function nameToHex(value){
+			if(value.charAt(0) != '#'){bhcolors.push('#'+ new THREE.Color(value).getHexString())}
+			else {bhcolors.push(value)}
+		}
+		
+		var bhcolors=[];
+		palette0.forEach(nameToHex);
+		palette0 = bhcolors.slice();
+	    
+	    // Define global variables
+		const pointer = new THREE.Vector2();
+		var boreholes = new THREE.Group();
+		var labels  = new THREE.Group();
+		var fences = new THREE.Group();
+		var gridHelper = new THREE.GridHelper();
+		var axesHelper = new THREE.AxesHelper();
+		var selected, first;
+		
+
+		// Create a renderer and attach it to the document
+		const renderer = new THREE.WebGLRenderer({ antialias: true });
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.xr.enabled = true;
+		document.body.appendChild(VRButton.createButton(renderer));
+		document.body.appendChild(renderer.domElement);
+		
+		window.addEventListener( 'resize', onWindowResize );
+		
+		// Create a scene
+		const scene = new THREE.Scene();
+
+		// Create a camera
+		const camera = new THREE.PerspectiveCamera(40, window.innerWidth/window.innerHeight, 0.1, 1000);
+		camera.position.set(0,30,60);
+
+		// Create a raycaster
+		let raycaster = new THREE.Raycaster();
+		document.addEventListener( 'dblclick', onDblclick );
+		
+	
+		//Add orbit controls
+		const controls = new OrbitControls( camera, renderer.domElement );
+		
+		
+		//Add lighting to the scene
+		scene.add( new THREE.AmbientLight( 0xffffff, 1.5 ) );
+		const directLight = new THREE.DirectionalLight( 0xffffff, 2.5 );
+		directLight.target.position.set(-2,0,-2);
+		scene.add(directLight);
+		scene.add(directLight.target);
+		scene.background = new THREE.Color('seashell');
+		
+		
+		// Add elements to the scene
+		scene.add( boreholes );
+		scene.add( labels );
+		scene.add( fences );
+		scene.add( gridHelper );
+		scene.add( axesHelper );
+		
+		// Reset scene and view
+		resetScene(scene, bhdata, bhcolors);
+		centerView(camera, controls, gridHelper);
+		fences = updateFences(fencedata, boreholes, fences, bhcolors);
+		
+		// Model and funtions definitions for controls
+		const bhscale = 1, opacity = 0.7, vscale = 1, fsize = 1, bgcolor='seashell';
+		const model = {bhscale, opacity, vscale, fsize, bgcolor, 
+			bh_colors:
+				function (){ $('#bhcolors').modal('show').draggable();
+					for (let i in bhcolors){
+						$('#bhCol'+i).val(bhcolors[i]);
+					}
+					
+			}, edit_bh: 
+			  function (){if (typeof selected == 'undefined'){
+					alert('Select a borehole first');
+					}
+				else {
+					let myModal = new bootstrap.Modal(document.getElementById('bhedit'));
+					let form = document.getElementById('bhEditForm');
+					let stratval = '';
+					for (let strat of selected.children){
+						stratval += strat.geometry.parameters.height + ', ';
+						}
+					let formData = {
+						    bhname:selected.name, 
+							bhx:selected.position.x, 
+							bhy:selected.position.y, 
+							bhz:selected.position.z, 
+							strata: stratval.slice(0,-2)
+						};
+					for (let key in formData){
+						form.elements[key].value = formData[key];
+					}
+					$('#bhedit').modal('show').draggable();
+					
+				}
+				
+			}, add_bh:
+				function () {
+					$('#bhnew').modal('show').draggable();
+					
+			}, del_bh: 
+				function () {if (typeof selected == 'undefined'){
+					alert('Select a borehole first');
+					}
+					else {
+						labels.remove(labels.getObjectByProperty('uuid', selected.lblId));
+						boreholes.remove(selected);
+						fences.clear();
+						fences = updateFences(fencedata, boreholes, fences, bhcolors);
+						for (let fence of fences.children){fence.changeOpacity(model.opacity)}
+					}
+			}, del_fence:
+				function() {if (selected == undefined || !selected instanceof Fence){
+					alert('Select a fence first');
+				}
+				else {
+					for (let i in fencedata){if(fencedata[i].id == selected.uuid){fencedata.splice(i,1)}}
+					fences.remove(selected);
+				}
+			}, add_fence:
+				function() {if (selected instanceof Borehole){
+					first = selected;
+					let colorSelect = [];
+					for (let segment of selected.children){colorSelect.push('#'+segment.material.color.lerp(new THREE.Color('orange'), 0.6).getHexString())};
+					//selected.changeColors(new Array(6).fill('magenta'));
+					}
+				else {
+					alert('Select a borehole first');
+					}
+			}, loadfile: function(){
+				let input = document.createElement('input');
+				input.type = 'file';
+				input.accept = '.csv, .json';
+				input.click();
+				input.onchange = _ => {
+					let reader = new FileReader();
+					reader.readAsText(input.files[0]);
+					reader.onload = function (event) {
+						if (input.files[0].type == "application/json") {bhdata = JSON.parse(reader.result);
+							boreholes.clear();
+							labels.clear();
+							fences.clear();
+							for (let i of bhdata.features){
+								boreholes.add(createBorehole(i, bhcolors));
+							}
+							for (let borehole of boreholes.children){
+								let lbl = createLabel(borehole);
+								labels.add(lbl);
+							}
+							resetScene(scene, bhdata, bhcolors);
+							centerView(camera, controls, gridHelper);
+							
+							}
+						else if (input.files[0].type == "text/csv"){
+							Papa.parse(input.files[0], {header:true, skipEmptyLines:true, complete: function(results, file) {
+							let tempfeatures = [];
+							for (let i of results.data){
+								let tempstrata = [];
+								for (let j = 0; j < Object.keys(i).length - 4; j++){
+									tempstrata.push(eval('i.h'+(j+1)));
+								}
+								tempfeatures.push(	{ type:"Feature", geometry: {type:"Point", coordinates:[parseFloat(i.x), parseFloat(i.y), parseFloat(i.z)]}, 
+										  properties: {name: i.name, strata: tempstrata }});
+							} 
+							
+							bhdata = {
+									type:"FeatureCollection", 
+									crs: {
+											type: "name",
+											properties: {name: "EPSG:6369"}
+									  },
+									 features:tempfeatures
+								}
+							resetScene(scene, bhdata, bhcolors);
+							centerView(camera, controls, gridHelper);	
+												
+							} //end of papaparse complete
+						}) //end of papaparse
+					} //end of else if
+				} // end of reader.onload
+				}
+			}, show_help: function ()
+				{$('#instructions').modal('show').draggable();
+			}, show_about: function ()
+				{$('#about').modal('show').draggable();
+			},
+			reset: function (){gui.reset();
+				controls.reset();
+			}, 
+			savefile:function(){
+				bhdata = {"type":"FeatureCollection", 
+								"crs": {"type": "name","properties": {"name": "EPSG:6369"}},
+								"features":[]}
+				for (let bh of boreholes.children){
+					let tempstrata = [];
+					for (let segment of bh.children){
+						tempstrata.push(segment.geometry.parameters.height);
+					}
+					bhdata.features.push({ type:"Feature", geometry: {type:"Point", coordinates:[parseFloat(bh.position.x), parseFloat(bh.position.y), parseFloat(bh.position.z)]}, 
+										  properties: {name: bh.name, strata: tempstrata }});
+				}
+				//var blob = new Blob([JSON.stringify(bhdata)], { type: 'text/plain' });
+				var file = new File([JSON.stringify(bhdata)], "myData.json", {type: "text/plain;charset=utf-8"});
+				saveAs(file);
+			}
+				
+		}
+  
+		//Create and add a GUI
+		const gui = new GUI();
+		gui.title('FDXP Controls');
+		
+		gui.add(model, 'bgcolor', ['seashell', 'linen', 'white', 'lightgray', 'lavender', 'lightskyblue']).name('Background').onChange(function(value) {
+			scene.background.set( value );
+		});
+		gui.add(model, 'vscale', 0, 10,0.1).name('Vertical scale').onChange(value => {changevScale(boreholes, fences, labels, value)});
+		gui.add(model, 'loadfile').name('Load file...');
+		gui.add(model, 'savefile').name('Save file...');
+		gui.add(model, 'bh_colors').name('Change colors');
+		const folder1 = gui.addFolder( 'Boreholes' );
+		folder1.add(boreholes, 'visible').name('Visible');
+		folder1.add(labels, 'visible').name('Labels');
+		folder1.add(model, 'fsize', 0, 8, 0.25).name('Font size').onChange(value => {for (let lbl of labels.children){lbl.fSize(value)}});
+		folder1.add(model, 'bhscale', 0, 2.5, 0.1).name('Radius').onChange(value => {for (let bh of boreholes.children){bh.changeRadius(value)}});
+		folder1.add(model, 'add_bh').name('Add borehole');
+		folder1.add(model, 'edit_bh').name('Edit borehole');
+		folder1.add(model, 'del_bh').name('Remove borehole');
+	
+		const folder2 = gui.addFolder( 'Fences' );
+		folder2.add(fences, 'visible').name('Visible');
+		folder2.add(model, 'opacity', 0, 1, 0.02).name('Opacity').onChange(value => {fences.traverse(function(obj){if(obj.type === 'Mesh'){obj.material.opacity = value}})});
+		folder2.add(model, 'add_fence').name('Add fence');
+		folder2.add(model, 'del_fence').name('Remove fence');
+
+		const folder3 = gui.addFolder( 'Helpers' );
+		folder3.add(gridHelper, 'visible').name('Show grid');
+		folder3.add(axesHelper, 'visible').name('Show axes');
+		folder3.add(model, 'reset' ).name('Reset options');
+		folder3.add(model, 'show_help' ).name('Instructions');
+		folder3.add(model, 'show_about' ).name('About');
+		folder3.close();
+		//gui.close();
+		
+		// Function to select boreholes
+		function onDblclick( event ) {
+			pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+			raycaster.setFromCamera( pointer, camera );
+
+			// find intersections
+			const inter = raycaster.intersectObjects(boreholes.children);
+			const intersects = inter.concat(raycaster.intersectObjects(fences.children));
+			if ( intersects.length > 0 ) {																																																																																																																																						
+				if (typeof selected != 'undefined'){
+					selected.changeColors(); //change mesh color from yellow to original
+				}
+				selected = intersects[0].object.parent;
+				let colorSelect = [];
+				for (let segment of selected.children){colorSelect.push('#'+segment.material.color.lerp(new THREE.Color('yellow'), 0.6).getHexString())};
+				//selected.changeColors(new Array(6).fill('yellow'));
+				selected.changeColors(colorSelect);
+			}
+			else if (typeof selected != 'undefined' ) {
+				selected.changeColors();
+				selected = undefined;
+			}
+			if (typeof first != 'undefined' && typeof selected != 'undefined'){
+				fencedata.push({id:'', bh0:first.name, bh1:selected.name});
+				fences.clear();
+				fences = updateFences(fencedata, boreholes, fences, bhcolors);
+				for (let fence of fences.children){fence.changeOpacity(model.opacity)}
+				first = undefined;
+				}
+			else {first = undefined;}
+		}
+		
+		$('#bhColorBtn').click(bhColorEdit);
+		$('#bhEditBtn').click(bhEdit);
+		$('#bhNewBtn').click(bhNew);
+		$('.modal').on('hide.bs.modal', function(){document.addEventListener('dblclick',onDblclick)});
+		$('.modal').on('shown.bs.modal', function(){document.removeEventListener('dblclick',onDblclick)});
+		$('#palselect').on('change', function( obj ){for (let i in eval(obj.target.value)){$('#bhCol'+i).val(eval(obj.target.value)[i])}});
+		//var validator = $('#bhx').parsley();
+		
+		
+		// Functions to update scene after submission of form data 
+		function bhColorEdit(){
+			for (let i in bhcolors){
+				bhcolors[i] = $('#bhCol'+i).val();
+			}
+			for (let bh of boreholes.children){
+				bh.changeColors(bhcolors);
+			}
+			fences.clear();
+			fences = updateFences(fencedata, boreholes, fences, bhcolors);
+		}
+		
+		function bhEdit(){
+			document.addEventListener( 'dblclick', onDblclick );
+			let formData = new FormData(document.getElementById("bhEditForm"));
+			let x = formData.get('bhx');
+			let y = formData.get('bhy');
+			let z = formData.get('bhz');
+			let strat = formData.get('strata');
+			let name = formData.get('bhname');
+			let lbl = labels.getObjectByProperty('uuid', selected.lblId);
+			if (x != ""){selected.position.x = x}
+			if (y != ""){selected.position.y = y};
+			if (z != ""){selected.position.z = z};
+			if (strat != ""){
+				let item = strat.split(",");
+				let depth = 0;
+				for (let i in item){
+					item[i].trim();
+					selected.children[i].geometry.dispose();
+					selected.children[i].geometry = new THREE.CylinderGeometry(1, 1, parseFloat(item[i]), 32);
+					depth -= item[i];
+					selected.children[i].position.y = depth + item[i]/2
+				}
+			}
+			if (name != ""){lbl.text = name; selected.name = name}
+			lbl.position.set(selected.position.x, selected.position.y, selected.position.z);
+			fences.clear();
+			fences = updateFences(fencedata, boreholes, fences, bhcolors);
+			for (let fence of fences.children){fence.changeOpacity(model.opacity)}
+			changevScale(boreholes, fences, labels, model.vscale);			
+		} 
+		
+		function bhNew(){
+			let formData = new FormData(document.getElementById('bhNewForm'));
+			let x = formData.get('bhx');
+			let y = formData.get('bhy');
+			let z = formData.get('bhz');
+			var validator = $('#bhEditForm').parsley();
+			console.log(validator.isValid());
+			let strat = formData.get('strata').split(",");
+			let strata = [];
+				for (let i of strat){
+					i.trim();
+					strata.push(parseFloat(i));
+				}
+			let name = formData.get('bhname');
+			let bh = createBorehole( {geometry:{coordinates:[x, y, z]}, properties:{'name':name,'strata':strata} }, bhcolors);
+			bh.changeRadius(model.bhscale);
+			let lbl = createLabel(bh);
+			lbl.fontSize = model.fsize;
+			boreholes.add(bh);
+			labels.add(lbl);
+			fences.clear();
+			fences = updateFences(fencedata, boreholes, fences, bhcolors);
+			for (let fence of fences.children){fence.changeOpacity(model.opacity)}
+			changevScale(boreholes, fences, labels, model.vscale);
+		} 
+		
+		
+		// Animation loop
+		function animate() {
+			for (let item of labels.children){
+				item.lookAt( camera.position );
+			};
+			renderer.render( scene, camera );
+		}
+		
+		//  Function for window resize
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+		}
+		
+		// Set animation loop
+		renderer.setAnimationLoop(animate);		
+		
+
+	  </script>
+	</body>
+</html>
