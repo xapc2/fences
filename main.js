@@ -1,6 +1,6 @@
-import { Borehole } from './modules/boreholeMesh.js';
-import { Label } from './modules/labels.js';
-import { Fence } from './modules/fenceMesh.js';
+import { Borehole } from '/modules/boreholeMesh.js';
+import { Label } from '/modules/labels.js';
+import { Fence } from '/modules/fenceMesh.js';
 import { Box3, Vector3 } from 'three';
 
 // Function to create a geotechnical borehole
