@@ -10,9 +10,9 @@ View the live demo at [xapc2.github.io/fences](https://xapc2.github.io/fences).
 In progress
 
 ### Navigation
-+**Rotate view:** Left click + mouse move
-+**Pan view:** Right click + mouse move
-+**Zoom:** Mouse wheel scroll
++ **Rotate view:** Left click + mouse move
++ **Pan view:** Right click + mouse move
++ **Zoom:** Mouse wheel scroll
 
 
 ### Controls
